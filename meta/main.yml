@@ -1,0 +1,15 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: mwadman
+  description: LibreNMS on Linux
+  license: license (MIT)
+  min_ansible_version: 2.4
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+  galaxy_tags:
+    - ubuntu
+    - librenms
