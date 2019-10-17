@@ -2,8 +2,9 @@
 dependencies: []
 
 galaxy_info:
-  author: mwadman
+  role_name: librenms
   description: LibreNMS on Linux
+  author: mwadman
   license: license (MIT)
   min_ansible_version: 2.4
   platforms:
