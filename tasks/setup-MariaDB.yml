@@ -22,7 +22,7 @@
     priv: 'librenms.*:ALL'
   notify: Restart mysql
 
-- name:
+- name: Configure MariaDB
   ini_file:
     path: /etc/mysql/mariadb.conf.d/50-server.cnf
     section: mysqld
