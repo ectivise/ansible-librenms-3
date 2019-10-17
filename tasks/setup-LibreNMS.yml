@@ -35,8 +35,8 @@
     recursive: yes
     state: present
   loop:
-    - "{{ librenms_install_dir }}/rr"
-    - "{{ librenms_install_dir }}/log"
+    - "{{ librenms_install_dir }}/rrd"
+    - "{{ librenms_install_dir }}/logs"
     - "{{ librenms_install_dir }}/bootstrap/cache"
     - "{{ librenms_install_dir }}/storage/"
 
