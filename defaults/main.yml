@@ -11,6 +11,7 @@ librenms_update: no
 # Database variables
 librenms_database_name: librenms
 librenms_database_user: librenms
+librenms_database_host: localhost
 librenms_database_password:
 
 # Database connection
