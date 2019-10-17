@@ -1,1 +1,35 @@
 ---
+# Install directory for LibreNMS. The repository will be cloned here.
+librenms_install_dir: /opt/librenms
+
+# LibreNMS repository branch to clone
+librenms_version: master
+
+# Whether to update if already installed
+librenms_update: no
+
+# Database variables
+librenms_database_name: librenms
+librenms_database_user: librenms
+librenms_database_password:
+
+# Database connection
+librenms_database_login_host: localhost
+librenms_database_login_port: 3306
+librenms_database_login_user:
+librenms_database_login_password:
+
+#
+librenms_php_version: 7.2
+
+#
+librenms_timezone: "UTC"
+
+#
+librenms_listen_address: 0.0.0.0
+librenms_listen_port: 80
+
+# LibreNMS SNMP agent configuration
+librenms_snmpd_community_string: RANDOMSTRINGGOESHERE
+librenms_snmpd_syslocation: "Rack, Room, Building, City, Country [GPSX,Y]"
+librenms_snmpd_syscontact: "Your Name <your@email.address>"

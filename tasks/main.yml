@@ -1,1 +1,19 @@
 ---
+- name: Fail if OS is not Ubuntu 18.04
+  assert:
+    that:
+      - "ansible_distribution == 'Ubuntu'"
+      - "ansible_distribution_release == 'bionic'"
+    fail_msg: "This role only supports deployment to Ubuntu 18.04 systems"
+
+- name: Include LibreNMS setup tasks
+  include_tasks: setup-LibreNMS.yml
+
+- name: Include MariaDB setup tasks
+  include_tasks: setup-MariaDB.yml
+
+- name: Include web server setup tasks
+  include_tasks: setup-web.yml
+
+- name: Include LibreNMS configuration tasks
+  include_tasks: configure.yml

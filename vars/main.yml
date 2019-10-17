@@ -1,0 +1,30 @@
+---
+librenms_packages:
+  - acl
+  - curl
+  - composer
+  - fping
+  - git
+  - graphviz
+  - imagemagick
+  - mariadb-client
+  - mariadb-server
+  - mtr-tiny
+  - nginx-full
+  - nmap
+  - "php{{ librenms_php_version }}-cli"
+  - "php{{ librenms_php_version }}-curl"
+  - "php{{ librenms_php_version }}-fpm"
+  - "php{{ librenms_php_version }}-gd"
+  - "php{{ librenms_php_version }}-json"
+  - "php{{ librenms_php_version }}-mbstring"
+  - "php{{ librenms_php_version }}-mysql"
+  - "php{{ librenms_php_version }}-snmp"
+  - "php{{ librenms_php_version }}-xml"
+  - "php{{ librenms_php_version }}-zip"
+  - python-memcache
+  - python-mysqldb
+  - rrdtool
+  - snmp
+  - snmpd
+  - whois

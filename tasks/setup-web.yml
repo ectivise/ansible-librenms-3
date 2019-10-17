@@ -1,0 +1,26 @@
+---
+- name: Set date.timezone for CLI
+  lineinfile:
+    dest: "/etc/php/{{ librenms_php_version }}/fpm/php.ini"
+    regexp: "date.timezone ="
+    line: "date.timezone = {{ librenms_timezone }}"
+  notify: Restart PHP
+
+- name: Set date.timezone for FPM
+  lineinfile:
+    dest: "/etc/php/{{ librenms_php_version }}/cli/php.ini"
+    regexp: "date.timezone ="
+    line: "date.timezone = {{ librenms_timezone }}"
+  notify: Restart PHP
+
+- name: Configure Nginx
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/conf.d/librenms.conf
+  notify: Restart nginx
+
+- name: Remove default nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart nginx

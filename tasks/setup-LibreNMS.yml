@@ -1,0 +1,47 @@
+---
+- name: Install prerequisite packages:
+  apt:
+    name: "{{ librenms_packages }}"
+
+- name: Add LibreNMS user
+  user:
+    name: librenms
+    home: "{{ librenms_install_dir }}"
+    create_home: no
+    system: yes
+    groups: www-data
+
+- name: Clone LibreNMS repository
+  git:
+    repo: "https://github.com/librenms/librenms.git"
+    dest: "{{ librenms_install_dir }}"
+    version: "{{ librenms_version }}"
+    update: "{{ librenms_update }}"
+
+- name: Change ownership of LibreNMS directory
+  file:
+    path: "{{ librenms_install_dir }}"
+    owner: librenms
+    group: librenms
+    mode: '0770'
+    recurse: yes
+
+- name: Set ACL on required LibreNMS sub-directories
+  acl:
+    path: "{{ item }}"
+    etype: group
+    permissions: rwx
+    default: yes
+    recurse: yes
+    state: present
+  loop:
+    - "{{ librenms_install_dir }}/rr"
+    - "{{ librenms_install_dir }}/log"
+    - "{{ librenms_install_dir }}/bootstrap/cache"
+    - "{{ librenms_install_dir }}/storage/"
+
+- name: Install PHP dependencies
+  become_user: librenms
+  command: ./scripts/composer_wrapper.php install --no-dev
+  args:
+    chdir: "{{ librenms_install_dir }}"
