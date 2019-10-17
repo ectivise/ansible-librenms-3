@@ -32,7 +32,7 @@
     etype: group
     permissions: rwx
     default: yes
-    recurse: yes
+    recursive: yes
     state: present
   loop:
     - "{{ librenms_install_dir }}/rr"
