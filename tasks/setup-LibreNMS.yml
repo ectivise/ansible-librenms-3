@@ -41,7 +41,6 @@
     - "{{ librenms_install_dir }}/storage/"
 
 - name: Install PHP dependencies
-  become_user: librenms
-  command: ./scripts/composer_wrapper.php install --no-dev
-  args:
-    chdir: "{{ librenms_install_dir }}"
+  composer:
+    command: install
+    working_dir: "{{ librenms_install_dir }}"
