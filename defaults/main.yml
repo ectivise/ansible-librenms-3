@@ -2,7 +2,7 @@
 # Install directory for LibreNMS. The repository will be cloned here.
 librenms_install_dir: /opt/librenms
 
-#
+# System user that will own files.
 librenms_system_user: librenms
 
 # GUI administrative user
@@ -26,13 +26,13 @@ librenms_database_login_port: 3306
 librenms_database_login_user:
 librenms_database_login_password:
 
-#
+# PHP version. Needs to be checked and incremented with each update.
 librenms_php_version: 7.2
 
-#
+# Timezone of the system
 librenms_timezone: "UTC"
 
-#
+# IP address and port for the web UI to listen on
 librenms_listen_address: 0.0.0.0
 librenms_listen_port: 80
 
