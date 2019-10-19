@@ -25,9 +25,7 @@
   changed_when: "'Nothing to migrate' not in librenms_database_build_result.stdout"
 
 - name: Get list of current LibreNMS users
-  shell: |
-    set -o pipefail
-    echo select username from users | mysql -u{{ librenms_database_user }} -p{{ librenms_database_password }} {{ librenms_database_name }}
+  command: "mysql -u{{ librenms_database_user }} -p{{ librenms_database_password }} {{ librenms_database_name }} -e 'SELECT username FROM users'"
   register: librenms_user_list
   changed_when: false
 
