@@ -21,8 +21,8 @@
 - name: Change ownership of LibreNMS directory
   file:
     path: "{{ librenms_install_dir }}"
-    owner: "{{ librenms_user }}"
-    group: "{{ librenms_user }}"
+    owner: "{{ librenms_system_user }}"
+    group: "{{ librenms_system_user }}"
     mode: '0770'
     recurse: yes
 

@@ -5,7 +5,7 @@
 
 - name: Add LibreNMS user
   user:
-    name: "{{ librenms_user }}"
+    name: "{{ librenms_system_user }}"
     home: "{{ librenms_install_dir }}"
     create_home: no
     system: yes

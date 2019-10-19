@@ -15,7 +15,7 @@
     - { setting: 'DB_DATABASE', value: '{{ librenms_database_name }}' }
     - { setting: 'DB_USERNAME', value: '{{ librenms_database_user }}' }
     - { setting: 'DB_PASSWORD', value: '{{ librenms_database_password }}' }
-    - { setting: 'LIBRENMS_USER', value: '{{ librenms_user }}' }
+    - { setting: 'LIBRENMS_USER', value: '{{ librenms_system_user }}' }
 
 - name: Configure snmpd
   template:

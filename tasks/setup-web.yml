@@ -2,7 +2,7 @@
 - name: Add www-data user to librenms group
   user:
     name: www-data
-    groups: "{{ librenms_user }}"
+    groups: "{{ librenms_system_user }}"
     append: yes
 
 - name: Set date.timezone for CLI

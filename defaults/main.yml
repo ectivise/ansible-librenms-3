@@ -3,7 +3,7 @@
 librenms_install_dir: /opt/librenms
 
 #
-librenms_user: librenms
+librenms_system_user: librenms
 
 # Whether to update if already installed
 librenms_update: true
