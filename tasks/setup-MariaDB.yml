@@ -1,4 +1,9 @@
 ---
+- name: Install MariaDB server package
+  apt:
+    name: mariadb-server
+  when: "librenms_database_login_host == 'localhost'"
+
 - name: Create database via local socket
   mysql_db:
     name: "{{ librenms_database_name }}"

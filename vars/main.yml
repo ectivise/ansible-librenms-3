@@ -8,7 +8,6 @@ librenms_packages:
   - graphviz
   - imagemagick
   - mariadb-client
-  - mariadb-server
   - mtr-tiny
   - nginx-full
   - nmap
