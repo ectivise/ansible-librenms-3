@@ -1,4 +1,10 @@
 ---
+- name: Configure LibreNMS
+  template:
+    src: config.php.j2
+    dest: "{{ librenms_install_dir }}/config.php"
+  notify: Restart PHP
+
 - name: Configure snmpd
   template:
     src: snmpd.conf.j2

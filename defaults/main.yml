@@ -6,7 +6,8 @@ librenms_install_dir: /opt/librenms
 librenms_user: librenms
 
 # Whether to update if already installed
-librenms_update: no
+librenms_update: true
+librenms_version: master  # Can also be set to a specific version tag for stable releases
 
 # Database variables
 librenms_database_name: librenms
@@ -34,3 +35,6 @@ librenms_listen_port: 80
 librenms_snmpd_community_string: RANDOMSTRINGGOESHERE
 librenms_snmpd_syslocation: "Rack, Room, Building, City, Country [GPSX,Y]"
 librenms_snmpd_syscontact: "Your Name <your@email.address>"
+
+# LibreNMS SNMP poller configuration
+librenms_snmp_community_string_default: public

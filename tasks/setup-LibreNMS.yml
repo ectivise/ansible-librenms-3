@@ -16,6 +16,7 @@
     repo: "https://github.com/librenms/librenms.git"
     dest: "{{ librenms_install_dir }}"
     version: "{{ librenms_version }}"
+    update: no # No update, because the LibreNMS cronjob does this if set.
 
 - name: Install PHP dependencies
   composer:
