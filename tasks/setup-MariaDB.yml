@@ -19,7 +19,7 @@
     login_port: "{{ librenms_database_login_port }}"
     login_user: "{{ librenms_database_login_user }}"
     login_password: "{{ librenms_database_login_password }}"
-    priv: 'librenms.*:ALL'
+    priv: '{{ librenms_database_name }}.*:ALL'
   notify: Restart mysql
 
 - name: Configure MariaDB
