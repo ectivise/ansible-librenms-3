@@ -41,11 +41,11 @@
 
 - name: Change permissions on certain LibreNMS sub-directories
   file:
-    path: "{{ item }}"
-    mode: "u=rwX,g=rwX"
+    path: "{{ item.path }}"
+    mode: "{{ item.mode }}"
     recurse: yes
   loop:
-    - "{{ librenms_install_dir }}/rrd"
-    - "{{ librenms_install_dir }}/logs"
-    - "{{ librenms_install_dir }}/bootstrap/cache"
-    - "{{ librenms_install_dir }}/storage/"
+    - { path: "{{ librenms_install_dir }}/rrd", mode: "u=rwX,g=rwX,o=rX" }
+    - { path: "{{ librenms_install_dir }}/logs", mode: "u=rwX,g=rwX" }
+    - { path: "{{ librenms_install_dir }}/bootstrap/cache", mode: "u=rwX,g=rwX" }
+    - { path: "{{ librenms_install_dir }}/storage/", mode: "u=rwX,g=rwX" }
