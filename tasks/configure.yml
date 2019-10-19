@@ -22,7 +22,7 @@
   args:
     chdir: "{{ librenms_install_dir }}"
   register: librenms_database_build_result
-  changed_when: "'Nothing to migrate' not in librenms_database_build.stdout"
+  changed_when: "'Nothing to migrate' not in librenms_database_build_result.stdout"
 
 - name: Get list of current LibreNMS users
   shell: |
