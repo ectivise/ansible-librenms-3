@@ -41,3 +41,18 @@ $config['update_channel'] = '{{ librenms_version if librenms_version == 'master'
 {% if librenms_update == false %}
 $config['update'] = 0;
 {% endif %}
+
+# Number in days of how long to keep old rrd files. 0 disables this feature
+$config['rrd_purge'] = 0;
+
+# Uncomment to submit callback stats via proxy
+#$config['callback_proxy'] = "hostname:port";
+
+# Set default port association mode for new devices (default: ifIndex)
+#$config['default_port_association_mode'] = 'ifIndex';
+
+# Enable the in-built billing extension
+$config['enable_billing'] = 1;
+
+# Enable the in-built services support (Nagios plugins)
+$config['show_services'] = 1;
