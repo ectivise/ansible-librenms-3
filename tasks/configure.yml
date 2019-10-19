@@ -17,6 +17,13 @@
     - { setting: 'DB_PASSWORD', value: '{{ librenms_database_password }}' }
     - { setting: 'LIBRENMS_USER', value: '{{ librenms_system_user }}' }
 
+- name: Initialise the LibreNMS database
+  shell: "php build-base.php"
+  args:
+    chdir: "{{librenms_dir}}"
+  register: librenms_database_build_result
+  changed_when: "'Nothing to migrate' not in librenms_database_build.stdout"
+
 - name: Configure snmpd
   template:
     src: snmpd.conf.j2
