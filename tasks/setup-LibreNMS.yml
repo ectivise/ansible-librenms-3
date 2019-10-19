@@ -9,7 +9,6 @@
     home: "{{ librenms_install_dir }}"
     create_home: no
     system: yes
-    groups: www-data
 
 - name: Clone LibreNMS repository
   git:

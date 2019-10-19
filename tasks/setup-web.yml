@@ -1,4 +1,10 @@
 ---
+- name: Add www-data user to librenms group
+  user:
+    name: www-data
+    groups: "{{ librenms_user }}"
+    append: yes
+
 - name: Set date.timezone for CLI
   lineinfile:
     dest: "/etc/php/{{ librenms_php_version }}/fpm/php.ini"
