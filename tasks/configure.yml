@@ -5,6 +5,18 @@
     dest: "{{ librenms_install_dir }}/config.php"
   notify: Restart PHP
 
+- name: Set LibreNMS environment variables
+  lineinfile:
+    path: "{{ librenms_install_dir }}/.env"
+    regex: "^{{ item.setting }}="
+    line: "{{ item.setting }}={{ item.value }}"
+  loop:
+    - { setting: 'DB_HOST', value: '{{ librenms_database_host }}' }
+    - { setting: 'DB_DATABASE', value: '{{ librenms_database_name }}' }
+    - { setting: 'DB_USERNAME', value: '{{ librenms_database_user }}' }
+    - { setting: 'DB_PASSWORD', value: '{{ librenms_database_password }}' }
+    - { setting: 'LIBRENMS_USER', value: '{{ librenms_user }}' }
+
 - name: Configure snmpd
   template:
     src: snmpd.conf.j2
