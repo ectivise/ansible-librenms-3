@@ -7,17 +7,13 @@
 
 - name: Set date.timezone for CLI
   lineinfile:
-    dest: "/etc/php/{{ librenms_php_version }}/fpm/php.ini"
+    dest: "/etc/php/{{ librenms_php_version }}/{{ item }}/php.ini"
     regexp: "date.timezone ="
     line: "date.timezone = {{ librenms_timezone }}"
   notify: Restart PHP
-
-- name: Set date.timezone for FPM
-  lineinfile:
-    dest: "/etc/php/{{ librenms_php_version }}/cli/php.ini"
-    regexp: "date.timezone ="
-    line: "date.timezone = {{ librenms_timezone }}"
-  notify: Restart PHP
+  loop:
+    - fpm
+    - cli
 
 - name: Configure Nginx
   template:
