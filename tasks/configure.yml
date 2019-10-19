@@ -18,19 +18,21 @@
     - { setting: 'LIBRENMS_USER', value: '{{ librenms_system_user }}' }
 
 - name: Initialise the LibreNMS database
-  shell: "php build-base.php"
+  command: "php build-base.php"
   args:
     chdir: "{{ librenms_install_dir }}"
   register: librenms_database_build_result
   changed_when: "'Nothing to migrate' not in librenms_database_build.stdout"
 
 - name: Get list of current LibreNMS users
-  shell: "echo select username from users | mysql -u{{ librenms_database_user }} -p{{ librenms_database_password }} {{ librenms_database_name }}"
+  shell: |
+    set -o pipefail
+    echo select username from users | mysql -u{{ librenms_database_user }} -p{{ librenms_database_password }} {{ librenms_database_name }}
   register: librenms_user_list
   changed_when: false
 
 - name: Create LibreNMS admin user
-  shell: "php adduser.php {{ librenms_admin_user }} {{ librenms_admin_password }} 10 {{ librenms_admin_email }}"
+  command: "php adduser.php {{ librenms_admin_user }} {{ librenms_admin_password }} 10 {{ librenms_admin_email }}"
   args:
     chdir: "{{ librenms_install_dir }}"
   when: "librenms_admin_user not in librenms_user_list.stdout_lines"
