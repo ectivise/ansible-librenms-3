@@ -43,7 +43,7 @@
   file:
     path: "{{ item }}"
     mode: "u=rwX,g=rwX"
-    recursive: yes
+    recurse: yes
   loop:
     - "{{ librenms_install_dir }}/rrd"
     - "{{ librenms_install_dir }}/logs"
