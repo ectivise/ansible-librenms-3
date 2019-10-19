@@ -17,3 +17,25 @@
 
 - name: Include LibreNMS configuration tasks
   include_tasks: configure.yml
+
+- name: Change ownership of LibreNMS directory
+  file:
+    path: "{{ librenms_install_dir }}"
+    owner: "{{ librenms_user }}"
+    group: "{{ librenms_user }}"
+    mode: '0770'
+    recurse: yes
+
+- name: Set ACL on required LibreNMS sub-directories
+  acl:
+    path: "{{ item }}"
+    etype: group
+    permissions: rwx
+    default: yes
+    recursive: yes
+    state: present
+  loop:
+    - "{{ librenms_install_dir }}/rrd"
+    - "{{ librenms_install_dir }}/logs"
+    - "{{ librenms_install_dir }}/bootstrap/cache"
+    - "{{ librenms_install_dir }}/storage/"

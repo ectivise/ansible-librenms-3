@@ -2,8 +2,8 @@
 # Install directory for LibreNMS. The repository will be cloned here.
 librenms_install_dir: /opt/librenms
 
-# LibreNMS repository branch to clone
-librenms_version: master
+#
+librenms_user: librenms
 
 # Whether to update if already installed
 librenms_update: no

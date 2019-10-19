@@ -5,7 +5,7 @@
 
 - name: Add LibreNMS user
   user:
-    name: librenms
+    name: "{{ librenms_user }}"
     home: "{{ librenms_install_dir }}"
     create_home: no
     system: yes
@@ -16,29 +16,6 @@
     repo: "https://github.com/librenms/librenms.git"
     dest: "{{ librenms_install_dir }}"
     version: "{{ librenms_version }}"
-    update: "{{ librenms_update }}"
-
-- name: Change ownership of LibreNMS directory
-  file:
-    path: "{{ librenms_install_dir }}"
-    owner: librenms
-    group: librenms
-    mode: '0770'
-    recurse: yes
-
-- name: Set ACL on required LibreNMS sub-directories
-  acl:
-    path: "{{ item }}"
-    etype: group
-    permissions: rwx
-    default: yes
-    recursive: yes
-    state: present
-  loop:
-    - "{{ librenms_install_dir }}/rrd"
-    - "{{ librenms_install_dir }}/logs"
-    - "{{ librenms_install_dir }}/bootstrap/cache"
-    - "{{ librenms_install_dir }}/storage/"
 
 - name: Install PHP dependencies
   composer:
