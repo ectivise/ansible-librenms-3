@@ -15,6 +15,9 @@
 - name: Include web server setup tasks
   include_tasks: setup-web.yml
 
+- name: Include SNMP setup tasks
+  include_tasks: setup-SNMP.yml
+
 - name: Include LibreNMS configuration tasks
   include_tasks: configure.yml
 

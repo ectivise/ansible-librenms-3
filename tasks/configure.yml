@@ -37,18 +37,6 @@
   register: librenms_add_admin_user_result
   changed_when: "'already exists' not in librenms_add_admin_user_result.stdout"
 
-- name: Configure snmpd
-  template:
-    src: snmpd.conf.j2
-    dest: /etc/snmp/snmpd.conf
-  notify: Restart snmpd
-
-- name: Download snmpd distro detection script
-  get_url:
-    url: https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro
-    dest: /usr/bin/distro
-    mode: "0755"
-
 - name: Configure cron
   copy:
     src: "{{ librenms_install_dir }}/librenms.nonroot.cron"

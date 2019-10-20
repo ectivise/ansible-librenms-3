@@ -44,3 +44,7 @@ librenms_snmpd_syscontact: ""   # "Your Name <your@email.address>"
 # LibreNMS SNMP poller configuration
 librenms_snmp_community_string: public
 
+# LibreNMS SNMP Trap Handling
+librenms_snmp_traps_enabled: true
+librenms_snmp_traps_vendors: []
+librenms_snmp_traps_community_string: public

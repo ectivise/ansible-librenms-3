@@ -1,0 +1,5 @@
+# Authorises traps based on community string
+authCommunity log,execute {{ librenms_snmp_traps_community_string }}
+
+# Run snmptrap.php when trap is receieved
+traphandle default /opt/librenms/snmptrap.php

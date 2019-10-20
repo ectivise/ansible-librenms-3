@@ -18,3 +18,12 @@
   service:
     name: snmpd
     state: restarted
+
+- name: Restart snmptrapd
+  service:
+    name: snmptrapd
+    state: restarted
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes

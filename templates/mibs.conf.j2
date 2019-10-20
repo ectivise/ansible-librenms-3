@@ -1,0 +1,6 @@
+[Service]
+Environment=MIBDIRS=+/opt/librenms/mibs
+{%- for vendor in librenms_snmp_traps_vendors -%}
+:/opt/librenms/mibs/{{ vendor }}
+{%- endfor %}
+Environment=MIBS=+ALL

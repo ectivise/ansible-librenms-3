@@ -1,0 +1,58 @@
+---
+- name: Configure snmpd
+  template:
+    src: snmpd.conf.j2
+    dest: /etc/snmp/snmpd.conf
+  notify: Restart snmpd
+
+- name: Download snmpd distro detection script
+  get_url:
+    url: https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro
+    dest: /usr/bin/distro
+    mode: "0755"
+
+- name: Install snmptrapd
+  apt:
+    name: snmptrapd
+  when: librenms_snmp_traps_enabled
+
+- name: Create snmptrapd systemd service configuration directory
+  file:
+    path: /etc/systemd/system/snmptrapd.service.d/
+    state: directory
+  when: librenms_snmp_traps_enabled
+
+- name: Find all supported mib vendors
+  find:
+    paths: /opt/librenms/mibs
+    recurse: no
+    file_type: directory
+  when: "librenms_snmp_traps_enabled and librenms_snmp_traps_vendors | length == 0"
+  register: librenms_snmp_vendors
+
+- name: Set librenms_snmp_vendors
+  set_fact:
+    librenms_snmp_traps_vendors: "{{ librenms_snmp_vendors.files | map(attribute='path') | list }}"
+  when: "librenms_snmp_traps_enabled and librenms_snmp_traps_vendors | length == 0"
+
+- name: Create snmptrapd systemd service configuration
+  template:
+    src: mibs.conf.j2
+    dest: /etc/systemd/system/snmptrapd.service.d/mibs.conf
+  when: librenms_snmp_traps_enabled
+  notify:
+    - Reload systemd daemon
+    - Restart snmptrapd
+
+- name: Configure snmptrapd
+  template:
+    src: snmptrapd.conf.j2
+    dest: /etc/snmp/snmptrapd.conf
+  when: librenms_snmp_traps_enabled
+  notify: Restart snmptrapd
+
+- name: Enable and start snmptrapd
+  service:
+    name: snmptrapd
+    state: started
+    enabled: yes

@@ -115,6 +115,21 @@ Remember to encrypt `librenms_snmp_community_string` if this is set.
 librenms_snmp_community_string: public
 ```
 
+###### SNMP Trap Receiver
+
+Enables and configures SNMP trap receivership.
+
+
+If left empty, `librenms_snmp_traps_vendors` will be populated with all vendors that LibreNMS knows the MIBs for.  
+To change this behaviour, set this to the list of vendors you have in your environment.
+
+
+Remember to encrypt `librenms_snmp_community_string` if this is set.
+
+```yaml
+librenms_snmp_traps_enabled: true
+librenms_snmp_traps_vendors: []
+librenms_snmp_traps_community_string: public
 ```
 
 ## Dependencies
