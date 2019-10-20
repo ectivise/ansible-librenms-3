@@ -1,0 +1,32 @@
+---
+- name: Change ownership of all LibreNMS directories
+  file:
+    path: "{{ librenms_install_dir }}"
+    owner: "{{ librenms_system_user }}"
+    group: "{{ librenms_system_user }}"
+    recurse: yes
+
+- name: Set ACL on required LibreNMS sub-directories
+  acl:
+    path: "{{ item }}"
+    etype: group
+    permissions: rwx
+    default: yes
+    recursive: yes
+    state: present
+  loop:
+    - "{{ librenms_install_dir }}/rrd"
+    - "{{ librenms_install_dir }}/logs"
+    - "{{ librenms_install_dir }}/bootstrap/cache"
+    - "{{ librenms_install_dir }}/storage/"
+
+- name: Change permissions on certain LibreNMS sub-directories
+  file:
+    path: "{{ item.path }}"
+    mode: "{{ item.mode }}"
+    recurse: yes
+  loop:
+    - { path: "{{ librenms_install_dir }}/rrd", mode: "u=rwX,g=rwX,o=rX" }
+    - { path: "{{ librenms_install_dir }}/logs", mode: "u=rwX,g=rwX" }
+    - { path: "{{ librenms_install_dir }}/bootstrap/cache", mode: "u=rwX,g=rwX" }
+    - { path: "{{ librenms_install_dir }}/storage/", mode: "u=rwX,g=rwX" }
