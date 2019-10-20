@@ -37,9 +37,10 @@ librenms_listen_address: 0.0.0.0
 librenms_listen_port: 80
 
 # LibreNMS SNMP agent configuration
-librenms_snmpd_community_string: RANDOMSTRINGGOESHERE
+librenms_snmpd_community_string: public
 librenms_snmpd_syslocation: ""  # "Rack, Room, Building, City, Country [GPSX,Y]"
 librenms_snmpd_syscontact: ""   # "Your Name <your@email.address>"
 
 # LibreNMS SNMP poller configuration
-librenms_snmp_community_string_default: public
+librenms_snmp_community_string: public
+

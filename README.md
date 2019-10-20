@@ -101,18 +101,20 @@ Configuration of LibreNMS's local agent (for responding to SNMP walks from remot
 Set `librenms_snmpd_community_string` to a secure password, and encrypt this with ansible-vault or other.
 
 ```yaml
-librenms_snmpd_community_string: RANDOMSTRINGGOESHERE
+librenms_snmpd_community_string: public
 librenms_snmpd_syslocation: ""  # "Rack, Room, Building, City, Country [GPSX,Y]"
 librenms_snmpd_syscontact: ""   # "Your Name <your@email.address>"
 ```
 
 ###### SNMP poller
 
-Sets the default SNMP community string to use when polling other devices.  
-Remember to encrypt `librenms_snmp_community_string_default` if this is set.
+Sets the SNMP community string to use when polling other devices.  
+Remember to encrypt `librenms_snmp_community_string` if this is set.
 
 ```yaml
-librenms_snmp_community_string_default: public
+librenms_snmp_community_string: public
+```
+
 ```
 
 ## Dependencies

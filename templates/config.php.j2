@@ -25,7 +25,7 @@ $config['install_dir']  = "{{ librenms_install_dir }}";
 #$config['rrdcached']    = "unix:/var/run/rrdcached.sock";
 
 ### Default community
-$config['snmp']['community'] = array("{{ librenms_snmp_community_string_default }}");
+$config['snmp']['community'] = array("{{ librenms_snmp_community_string }}");
 
 ### Authentication Model
 $config['auth_mechanism'] = "mysql"; # default, other options: ldap, http-auth
