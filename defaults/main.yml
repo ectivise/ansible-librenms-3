@@ -25,6 +25,7 @@ librenms_database_login_host: localhost
 librenms_database_login_port: 3306
 librenms_database_login_user:
 librenms_database_login_password:
+librenms_database_socket: /var/run/mysqld/mysqld.sock
 
 # PHP version. Needs to be checked and incremented with each update.
 librenms_php_version: 7.2
