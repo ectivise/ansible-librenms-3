@@ -22,6 +22,7 @@ librenms_packages:
   - "php{{ librenms_php_version }}-xml"
   - "php{{ librenms_php_version }}-zip"
   - python-memcache
+  - python-pymysql
   - python-mysqldb
   - rrdtool
   - snmp
