@@ -1,0 +1,23 @@
+---
+#- name: stop mariadb
+#  service:
+#    name: mariadb
+#    state: stopped
+
+- name: unInstall mariadb
+  apt: 
+    name: mariadb-server
+    state: absent
+    purge : true
+    autoremove: true
+    autoclean: true
+
+- name: Clean files
+  shell: "rm -rf /var/lib/mysql/*"
+  shell: "rm -rf /etc/mysql/*"
+
+
+- name: reinstall mariadb?
+  apt: 
+    name: mariadb-server
+    state: present

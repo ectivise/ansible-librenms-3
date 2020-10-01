@@ -1,0 +1,35 @@
+- name: Change system timezone
+  timezone: 
+    name: "{{ librenms_timezone}}"
+
+- name: set python3 venv 
+  block:
+    - name: Run python3 script to create venv 
+      script: ./python3.sh
+
+    - name: set python3 env, Create Symlink of python3,pip3
+      file: 
+        src: '/usr/bin/{{item.src}}'
+        dest: '/usr/bin/{{item.dest}}'
+        state: link  
+        force: true
+      with_items:
+          - {src: python3, dest: python}
+          - {src: pip3, dest: pip}
+
+    - name: Create python3 venv activate script
+      blockinfile:
+        path: /etc/profile.d/py3-venv.sh
+        create: yes
+        mode: +x
+        state: present
+        block: |
+          source /opt/venv/bin/activate
+    #- shell: exit
+
+    - name: check python version
+      shell: pip -V
+      register: pyreq
+    - debug: var=pyreq
+
+

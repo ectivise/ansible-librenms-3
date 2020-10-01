@@ -1,0 +1,5 @@
+mysql -u root --execute="CREATE DATABASE librenms CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
+mysql -u root --execute="CREATE USER 'librenms'@'localhost' IDENTIFIED BY 'ESPL888espl';"
+mysql -u root --execute="GRANT ALL PRIVILEGES ON librenms.* TO 'librenms'@'localhost';"
+mysql -u root --execute="FLUSH PRIVILEGES;"
+mysql -u root --execute="exit"

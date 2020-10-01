@@ -1,0 +1,10 @@
+---
+- name: Try to make the db server accessbile from anywhere or from a specific IP
+  ini_file:
+    path: /etc/mysql/mariadb.conf.d/50-server.cnf
+    section: mysqld
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: 'bind-address', value: '0.0.0.0' }
+  notify: Restart mariadb

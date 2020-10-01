@@ -1,12 +1,19 @@
 ---
-- name: Restart mysql
+- name: Restart mariadb
   service:
-    name: mysql
+    name: mariadb
     state: restarted
 
 - name: Restart PHP
   service:
     name: "php{{ librenms_php_version }}-fpm"
+    state: restarted
+
+- name: Restart nginx & PHP
+  service:
+    name: 
+      - nginx
+      - "php{{ librenms_php_version }}-fpm"
     state: restarted
 
 - name: Restart nginx

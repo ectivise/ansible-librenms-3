@@ -1,0 +1,5 @@
+---
+- name: Change permission
+  shell: changePermissions.sh
+  args:
+    chdir: "{{ librenms_install_dir }}"

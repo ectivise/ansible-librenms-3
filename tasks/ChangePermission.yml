@@ -1,0 +1,23 @@
+---
+- name: set permissions
+  file:
+    group: librenms
+    owner: librenms
+    path: "{{librenms_install_dir}}"
+    recurse: yes
+    state: directory
+
+- name: Set acl permissions
+  acl:
+    path: "{{librenms_install_dir}}/{{ item }}"
+    etype: group
+    permissions: rwx
+    default: yes
+    state: present
+  become: yes
+  with_items:
+    - rrd
+    - logs
+    - bootstrap/cache
+    - storage
+- shell: setfacl -d -m g::rwx /opt/librenms/rrd /opt/librenms/logs /opt/librenms/bootstrap/cache/ /opt/librenms/storage/

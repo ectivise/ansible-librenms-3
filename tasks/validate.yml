@@ -1,0 +1,8 @@
+---
+  - name: chdir to librenms_home and run php script to validate
+    shell:
+      cmd: php validate.php
+      chdir: "{{librenms_home}}"
+    register: validates
+  - debug: var=validates.stdout_lines
+#    when: "{{use_debug}} == true"

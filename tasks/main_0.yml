@@ -1,0 +1,30 @@
+---
+- name: Set timezone
+  timezone:
+    name: "{{ system_timzone }}"
+- name: install some tools
+  apt:
+    name: net-tools
+    state: present
+
+- name: added to ~/.bashrc
+  lineinfile:
+    state: present
+    path: "{{item}}"
+    regexp: '^set -o vi'
+    insertbefore: 'EOF'
+    line: 'set -o vi'
+  with_items:
+    - '/root/.bashrc'
+    - '/home/espl/.bashrc'
+- name: Build hosts file
+  lineinfile: dest=/etc/hosts regexp='.*{{ item }}$' line="{{ hostvars[item].ansible_host}} {{item}}" state=present
+  with_items: "{{ groups['test'] }}"
+
+- name: Validate the sudoers file before saving
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%ADMIN ALL='
+    line: '%ADMIN ALL=(ALL) NOPASSWD: ALL'
+    validate: /usr/sbin/visudo -cf %s

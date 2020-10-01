@@ -1,0 +1,8 @@
+---
+- name: get nms images
+  git:
+    become_user: librenms
+    repo: "https://github.com/ectivise/nmsimages.git"
+    dest: /opt/librenms/html/images/
+    update: yes
+    force: True

@@ -1,0 +1,25 @@
+---
+- name: Restart mysql
+  service:
+    name: mysql
+    state: restarted
+
+- name: Restart PHP
+  service:
+    name: "php{{ librenms_php_version }}-fpm"
+    state: restarted
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted
+
+- name: Restart snmpd
+  service:
+    name: snmpd
+    state: restarted
+
+- name: Restart snmptrapd
+  service:
+    name: snmptrapd
+    state: restarted

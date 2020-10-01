@@ -1,0 +1,22 @@
+---
+- name: install mariadb
+  apt: 
+    name: 
+      - mariadb-server
+      - mariadb-client
+    state: present
+
+- name: Configure MariaDB on localhost
+  ini_file:
+    path: /etc/mysql/mariadb.conf.d/50-server.cnf
+    section: mysqld
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: 'innodb_file_per_table', value: '1' }
+    - { option: 'lower_case_table_names', value: '0' }
+  notify: Restart mariadb
+
+- name: Configure MariaDB
+  script: ./dbscript.sh
+  

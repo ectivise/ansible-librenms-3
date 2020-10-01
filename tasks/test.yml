@@ -1,0 +1,9 @@
+- name: Show host's ip
+  debug:
+    msg: "{{ ansible_host }}"
+- name: set permission
+  copy: 
+    dest: /tmp/tmp.txt
+    content:
+      "{{ ansible_host }}"
+    #state: touch

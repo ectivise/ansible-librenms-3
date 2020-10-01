@@ -1,14 +1,18 @@
 ---
-# Install directory for LibreNMS. The repository will be cloned here.
+# LibreNMS Install directory
+new_installation: False
 librenms_install_dir: /opt/librenms
-
+librenms_home: "{{librenms_install_dir}}"
 # System user that will own files.
 librenms_system_user: librenms
+librenms_user: "{{librenms_system_user}}"
+general_password: ESPL888espl
 
 # GUI administrative user
 librenms_admin_user: admin
 librenms_admin_password: admin
-librenms_admin_email: ""
+librenms_admin_email: "ectiviseservice@gmail.com"
+librenms_config_file: "{{librenms_install_dir}}/config.php"
 
 # Whether to update if already installed
 librenms_update: true
@@ -18,34 +22,75 @@ librenms_version: master  # Can also be set to a specific version tag for stable
 librenms_database_name: librenms
 librenms_database_user: librenms
 librenms_database_host: localhost
-librenms_database_password:
+librenms_database_password: "{{general_password}}"
 
 # Database connection
 librenms_database_login_host: localhost
 librenms_database_login_port: 3306
 librenms_database_login_user:
-librenms_database_login_password:
+librenms_database_login_password: "{{general_password}}"
 librenms_database_socket: /var/run/mysqld/mysqld.sock
 
 # PHP version. Needs to be checked and incremented with each update.
-librenms_php_version: 7.2
+librenms_php_version: 7.4
 
 # Timezone of the system
-librenms_timezone: "UTC"
+system_timzone: "Asia/Singapore"
+librenms_timezone: "{{system_timzone}}"
 
 # IP address and port for the web UI to listen on
 librenms_listen_address: 0.0.0.0
 librenms_listen_port: 80
 
+#remote access settings
+remote_host_ip: 0.0.0.0
+
 # LibreNMS SNMP agent configuration
-librenms_snmpd_community_string: public
+librenms_snmpd_community_string:
+snmp_community:
+  - "'ESPL888espl'"
+  - "'espl888espl'"
+  - "'ESPL8*8espl'"
+autodiscovery_options:
+  - allow_duplicate_sysName
+  - discovery_by_ip
+
+#  - $config['autodiscovery']['xdp'] = true;
+#  - $config['discovery_by_ip'] = true;
+#  - $config['discovery_modules']['discovery-arp'] = true;
+#  - $config['discovery_modules']['service'] = true;
+#  - $config['discovery_modules']['ports'] = true;
+#  - $config['allow_duplicate_sysName'] = true;
+
 librenms_snmpd_syslocation: ""  # "Rack, Room, Building, City, Country [GPSX,Y]"
-librenms_snmpd_syscontact: ""   # "Your Name <your@email.address>"
+librenms_snmpd_syscontact: ""   # "ectiviseservice@gmail.com"
 
 # LibreNMS SNMP poller configuration
-librenms_snmp_community_string: public
-
+librenms_snmp_community_string:
+  - public
+  - ESPL888espl
+  - espl888espl
 # LibreNMS SNMP Trap Handling
 librenms_snmp_traps_enabled: true
 librenms_snmp_traps_vendors: []
 librenms_snmp_traps_community_string: public
+
+# customer info
+customer_name: UOB Singapore
+customer_site: UOBSG
+
+# auto discovery network
+#snmp_network: 127.0.0.1/32
+librenms_config_nets:
+  #- "10.0.0.0/16"
+  - '"10.12.100.0/24"'
+  - '"10.12.97.0/24"'
+  - '"10.12.96.0/24"'
+  - '"10.12.95.0/24"'
+  - '"10.12.96.0/24"'
+  - '"10.12.80.0/24"'
+  - '"10.12.81.1/24"'
+  - '"10.12.10.0/24"'
+  - '"10.12.0.0/8"'
+  - '"172.16.0.0/12"'
+  - '"192.168.0.0/16"'

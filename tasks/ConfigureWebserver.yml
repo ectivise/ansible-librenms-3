@@ -1,0 +1,24 @@
+---
+- name: Add www-data user to librenms group
+  user:
+    name: www-data
+    groups: "{{ librenms_system_user }}"
+    append: yes
+
+- name: Configure Nginx
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/conf.d/librenms.conf
+    owner: root
+    group: root
+    mode: '0644'
+    force: false
+  # notify: Restart nginx
+
+- name: Remove default nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: 
+    - Restart nginx
+    - Restart PHP

@@ -1,0 +1,12 @@
+---
+- name: Configure cron
+  copy:
+    src: "{{ librenms_install_dir }}/librenms.nonroot.cron"
+    dest: /etc/cron.d/librenms
+    remote_src: yes
+
+- name: Configure logrotate
+  copy:
+    src: "{{ librenms_install_dir }}/misc/librenms.logrotate"
+    dest: /etc/logrotate.d/librenms
+    remote_src: yes

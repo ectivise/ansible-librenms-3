@@ -1,0 +1,20 @@
+- name: Change system timezone
+  timezone: 
+    name: "{{ librenms_timezone}}"
+
+- name: Create Symlink of python3,pip3
+  file: 
+    src: '/usr/bin/{{item.src}}'
+    dest: '/usr/bin/{{item.dest}}'
+    state: link  
+    force: true
+  with_items:
+      - {src: python3, dest: python}
+      - {src: pip3, dest: pip}
+
+- name: check python version
+  shell: pip -V
+  register: pyreq
+- debug: var=pyreq
+
+

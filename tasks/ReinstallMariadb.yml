@@ -1,0 +1,5 @@
+---
+- name: Reinstasll mariadb
+  shell: "apt purge mariadb-server"
+  shell: "rm -rf /var/lib/mysql/"
+  shell: "apt install --reinstall mariadb-server"

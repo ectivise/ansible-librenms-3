@@ -1,0 +1,42 @@
+---
+- name: test if the file exists
+  tags: check config file exists
+  stat:
+    path: /opt/librenms/html/images/custom
+  register: dir_exists
+- debug: var=dir_exists
+  when: "{{use_debug}} == true"
+- name: Get stats of the FS object
+  stat:
+    path: "{{ librenms_install_dir }}/html/images/logos"
+  register: sym
+- debug: var=sym
+  when: "{{use_debug}} == true"
+- name: create custom directory under html/images
+  file:
+    path: "{{ librenms_install_dir }}/html/images/custom"
+    state: directory
+    owner: librenms
+    group: librenms
+    mode: 0755
+  when: dir_exists.stat.exists == true
+#
+- name: copy nms image files
+  get_url:
+    url: "http://wireless.ectivisecloud.com/images/{{item}}"
+    dest: "{{ librenms_install_dir }}/html/images/custom"
+    owner: librenms
+    group: librenms
+    force: True
+    mode: 0755
+  with_items:
+    - favicon-16x16.png
+    - favicon-32x32.png
+    - favicon.ico
+    - librenms_logo.png
+    - librenms_logo_blue.svg
+    - librenms_logo_dark.svg
+    - librenms_logo_light.svg
+    - librenms_logo_mono.svg
+    - logl0906.png
+    - logo.png

@@ -1,0 +1,11 @@
+---
+- import_tasks: Install-Librenms.yml
+- import_tasks: ConfigurePHP-FPM.yml
+- import_tasks: ConfigureWebserver.yml
+- import_tasks: ConfigureSnmpd.yml
+- import_tasks: cronjob.yml
+- import_tasks: ConfigMariadb.yml
+- import_tasks: CopyNMSImages.yml
+- import_tasks: Config-config.php.yml
+- import_tasks: ChangePermission.yml
+#- import_tasks: validate.yml

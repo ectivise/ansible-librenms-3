@@ -1,0 +1,40 @@
+---
+- name: Configure PHP-FPM, www.conf --> librenms.conf
+  copy:
+    remote_src: yes
+    src: /etc/php/7.4/fpm/pool.d/www.conf
+    dest: /etc/php/7.4/fpm/pool.d/librenms.conf
+    #state: present
+
+#- name: Copy snmpd.conf
+#  copy:
+#    remote_src: yes
+#    src: /opt/librenms/snmpd.conf.example
+#    dest: /etc/snmp/snmpd.conf
+
+- name: Configure PHP-FPM, change block www to librenms
+  lineinfile: 
+    path: '/etc/php/7.4/fpm/pool.d/librenms.conf'
+    regexp: '[www]'
+    line: '[librenms]'
+    state: present
+
+- name: Configure PHP-FPM , change user
+  lineinfile: 
+    path: '/etc/php/7.4/fpm/pool.d/librenms.conf'
+    regexp: '^user = www-data'
+    line: 'user = librenms'
+    state: present
+
+- name: Configure PHP-FPM , change group
+  lineinfile: 
+    path: '/etc/php/7.4/fpm/pool.d/librenms.conf'
+    regexp: '^group = www-data'
+    line: 'group = librenms'
+    state: present
+    #notify: Restart PHP
+
+- debug:
+    msg:
+      - "Restart PHP "
+    

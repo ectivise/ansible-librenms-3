@@ -1,0 +1,15 @@
+---
+# settimezone.yml
+- name: Set date.timezone for CLI
+  lineinfile:
+    dest: "/etc/php/{{ librenms_php_version }}/{{ item }}/php.ini"
+    regexp: "date.timezone ="
+    line: "date.timezone = {{ librenms_timezone }}"
+  notify: Restart PHP
+  loop:
+    - fpm
+    - cli
+
+- name: Change system timezone
+  timezone: 
+    name: "{{ librenms_timezone}}"

@@ -1,8 +1,8 @@
 com2sec readonly  default         {{ librenms_snmpd_community_string }}
 
-group MyROGroup v2c        readonly
+group {{customer_site}} v2c        readonly
 view all    included  .1                               80
-access MyROGroup ""      any       noauth    exact  all    none   none
+access {{customer_site}} ""      any       noauth    exact  all    none   none
 
 syslocation {{ librenms_snmpd_syslocation }}
 syscontact {{ librenms_snmpd_syscontact }}

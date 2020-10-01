@@ -1,0 +1,19 @@
+- name: clone weathermap repo
+  #become: true
+  #become_user: "{{ librenms_user }}"
+  git:
+    repo: 'https://github.com/librenms-plugins/Weathermap.git'
+    dest: /opt/librenms/html/plugins/Weathermap
+
+- name: Check pluggin already exists
+  stat:
+    path: /opt/librenms/html/plugins/Weathermap
+  register: pluggin_path
+
+- name: setup weathermap
+  shell: 
+    cmd: |
+      chown -R librenms:librenms /opt/librenms/html/plugins/Weathermap
+      chmod 775 /opt/librenms/html/plugins/Weathermap/configs
+      echo "*/5 * * * * librenms /opt/librenms/html/plugins/Weathermap/map-poller.php >> /dev/null 2>&1" >> /etc/cron.d/librenms
+      when pluggin_path.stat.exists = true

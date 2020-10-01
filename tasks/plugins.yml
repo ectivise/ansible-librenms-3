@@ -1,0 +1,38 @@
+- name: Check if librenms is already installed
+  stat:
+    path: "{{ librenms_home }}"
+  register: __librenms_path
+
+- name: Clone LibreNMS repository
+  git:
+    repo: "https://github.com/librenms/librenms.git"
+    dest: "{{ librenms_home }}"
+    update: no # No update, because the LibreNMS cronjob does this if set.
+
+
+- name: clone weathermap repo
+  #become: true
+  #become_user: "{{ librenms_user }}"
+  git:
+    repo: 'https://github.com/librenms-plugins/Weathermap.git'
+    dest: /opt/librenms/html/plugins/Weathermap
+
+- name: Check pluggin already exists
+  stat:
+    path: /opt/librenms/html/plugins/Weathermap
+  register: plugin_path
+
+- name: Change file ownership, group and permissions
+  file:
+    recurse: yes
+    path: /opt/librenms/html/plugins/Weathermap
+    owner: librenms
+    group: librenms
+
+- name: Change file ownership, group and permissions
+  file:
+    path: /opt/librenms/html/plugins/Weathermap/configs
+    owner: librenms
+    group: librenms
+    mode: '0755'
+

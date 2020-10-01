@@ -33,7 +33,7 @@ You will log in as this user first to create other users.
 ```yaml
 librenms_admin_user: admin
 librenms_admin_password: admin
-librenms_admin_email: ""
+librenms_admin_email: "ectiviseservice@gmail.com"
 ```
 
 ###### Update settings

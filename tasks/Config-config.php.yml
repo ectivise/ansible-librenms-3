@@ -1,0 +1,73 @@
+---
+# test if the file exists
+- name: test if the file exists
+  tags: check config file exists
+  stat:
+    path: /opt/librenms/config.php
+  register: file_exists
+- debug: var=file_exists
+  when: "{{use_debug}} == true"
+#Configure config phpfile
+- name: insert my snmp communities
+  lineinfile:
+    path: "{{librenms_config_file}}"
+    regexp: '^{{ item }}'
+    state: present
+    insertafter: "^.*array('public')*"
+    line: "$config['snmp']['community'][] = {{ item }};"
+  loop: "{{snmp_community}}"
+  when: file_exists.stat.exists == true
+- name: Insert title suffix
+  lineinfile:
+    path: "{{librenms_config_file}}"
+    regex: "^.*page_title_suffix.*"
+    state: present
+    create: True
+    line: "$config['page_title_suffix'] = 'EctiviseNMS';"
+  when: file_exists.stat.exists == true
+
+- name: favicon
+  lineinfile:
+    path: "{{librenms_config_file}}"
+    regex: "^.*favicon.*"
+    state: present
+#    create: True
+    line: $config['favicon'] = "images/custom/favicon.ico";
+  when: file_exists.stat.exists == true
+
+- name: Insert title image
+  lineinfile:
+    path: "{{librenms_config_file}}"
+    regex: "^.*title_image.*"
+    state: present
+#    create: True
+    line: "$config['title_image'] = 'images/custom/librenms_logo_mono.svg';"
+  when: file_exists.stat.exists == true
+
+- name: insert autodiscover net
+  lineinfile:
+    path: "{{librenms_config_file}}"
+    regexp: '^{{ item }}'
+    state: present
+    insertafter: "^.*RFC1918 networks*"
+    line: "$config['nets'][] = {{ item }};"
+  loop: "{{librenms_config_nets}}"
+  when: file_exists.stat.exists == true
+
+- name: insert autodiscover options
+  lineinfile:
+    path: "{{librenms_config_file}}"
+    regexp: '^{{ item }}'
+    state: present
+    insertafter: "^.*RFC1918 networks*"
+    line: "$config['{{ item }}'] = true;"
+  loop: "{{autodiscovery_options}}"
+  when: file_exists.stat.exists == true
+
+- name: disable billing feature
+  lineinfile:
+    path: "{{librenms_config_file}}"
+    regexp: ^.*enable_billing.*
+    line: $config['enable_billing'] = 0;
+  when: file_exists.stat.exists == true
+

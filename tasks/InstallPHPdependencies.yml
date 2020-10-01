@@ -1,0 +1,17 @@
+---
+- name: Check if librenms directory exists
+  stat: 
+    path: /opt/librenms/.git
+  register: status
+
+#- name: Install PHP dependencies
+#  become: yes
+#  become_user: librenms
+#  shell: "./scripts/composer_wrapper.php install --no-dev"
+#  args:
+#    chdir: "{{ librenms_home }}"
+
+
+- name: Install using composer wrapper
+  shell: php /opt/librenms/scripts/composer_wrapper.php install --no-dev
+  become_user: librenms

@@ -1,0 +1,122 @@
+---
+- name: Install software-properties-common
+  apt: 
+    name: software-properties-common
+    state: present
+
+- name: set universal Repositories
+  shell: add-apt-repository universe
+
+- name: Install Required Packages
+  apt: 
+    name: "{{librenms_packages}}"
+    state: present
+    update_cache: True
+
+- name: Create Symlink of python3,pip3
+  file: 
+    src: '/usr/bin/{{item.src}}'
+    dest: '/usr/bin/{{item.dest}}'
+    state: link  
+    force: true
+  with_items:
+      - {src: python3, dest: python}
+      - {src: pip3, dest: pip}
+
+- name: check python version
+  shell: pip -V
+  register: pyreq
+- debug: var=pyreq.stdout_lines
+  when: "{{use_debug}} == true"
+
+- name: Download LibreNMS
+  git:
+    repo: "https://github.com/librenms/librenms.git"
+    dest: "{{ librenms_install_dir }}"
+    # version: "{{ librenms_version }}"
+    update: no # No update, because the LibreNMS cronjob does this if set.
+
+- name: Add user libreNMS
+  user:
+    name: "{{ librenms_system_user }}"
+    home: "{{ librenms_install_dir }}"
+    create_home: no
+    system: yes
+
+- name: chown librenms
+  file:
+    path: /opt/librenms
+    owner: librenms
+    group: librenms
+    recurse: yes
+
+- name: set acl
+  acl:
+    path: "/opt/librenms/"
+    default: yes
+    recursive: yes
+    etype: group
+    permissions: rwx 
+    state: present
+
+- name: set permissions
+  command: "{{ item }}"
+  with_items:
+    #- chown -R librenms:librenms "{{ librenms_install_dir }}"
+    - chmod 771 -R "{{ librenms_install_dir }}"
+    - setfacl -d -m g::rwx "{{ librenms_install_dir }}/rrd" "{{ librenms_install_dir }}/logs" "{{ librenms_install_dir }}/bootstrap/cache/" "{{ librenms_install_dir }}/storage/"
+    - setfacl -R -m g::rwx "{{ librenms_install_dir }}/rrd" "{{ librenms_install_dir }}/logs" "{{ librenms_install_dir }}/bootstrap/cache/" "{{ librenms_install_dir }}/storage/"
+
+- name: Set date.timezone for CLI
+  lineinfile:
+    dest: "/etc/php/{{ librenms_php_version }}/{{ item }}/php.ini"
+    regexp: '^;date.timezone ='
+    line: date.timezone = "{{ librenms_timezone }}"
+  notify: Restart PHP
+  loop:
+    - fpm
+    - cli
+
+#- name: Install pip requirements
+#  shell: 
+#    cmd: pip3 install -r requirements.txt
+#    chdir: /opt/librenms
+- name: Install pip requirements
+  become_user: "{{ librenms_user }}"
+  become: yes
+  pip:
+    chdir: "{{ librenms_home }}"
+    requirements: requirements.txt
+  register: pyreq
+  tags:
+    - pip
+- debug: var=pyreq.stdout_lines
+  when: "{{use_debug}} == true"
+
+- name: Enable lnms command completion, copy file
+  copy:
+    remote_src: yes
+    src: /opt/librenms/misc/lnms-completion.bash
+    dest: /etc/bash_completion.d/
+
+- name: Enable lnms command completion, Create Symlink of file
+  file: 
+    src: '/opt/librenms/lnms'
+    dest: '/usr/local/bin/lnms'
+    state: link  
+
+- name: Install PHP dependencies
+  command: 
+  args:
+    cmd: ./scripts/composer_wrapper.php install --no-dev 
+    chdir: /opt/librenms
+  become: yes
+  become_user: librenms
+  notify:
+    - Restart PHP
+    - Restart nginx
+
+- name: Change system timezone
+  timezone: 
+    name: "{{ librenms_timezone}}"
+

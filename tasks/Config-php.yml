@@ -1,0 +1,19 @@
+---
+- name: copy nms image files
+  get_url:
+    url: "http://wireless.ectivisecloud.com/images/{{item}}"
+    #    dest: /opt/librenms/html/images/custom/
+    dest: /op/librenms/html/images/custom/
+    force: True
+    state: latest
+  with_items:
+    - favicon-16x16.png
+    - favicon-32x32.png
+    - favicon.ico
+    - librenms_logo.png
+    - librenms_logo_blue.svg
+    - librenms_logo_dark.svg
+    - librenms_logo_light.svg
+    - librenms_logo_mono.svg
+    - logl0906.png
+    - logo.png

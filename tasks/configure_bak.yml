@@ -1,0 +1,112 @@
+---        
+- name: Configure LibreNMS
+  template:
+    src: config.php.j2
+    dest: "{{ librenms_install_dir }}/config.php"
+  notify: Restart PHP
+
+- name: Set LibreNMS environment variables
+  lineinfile:
+    path: "{{ librenms_install_dir }}/.env"
+    regex: "^{{ item.setting }}="
+    line: "{{ item.setting }}={{ item.value }}"
+  loop:
+    - { setting: 'DB_HOST', value: '{{ librenms_database_host }}' }
+    - { setting: 'DB_DATABASE', value: '{{ librenms_database_name }}' }
+    - { setting: 'DB_USERNAME', value: '{{ librenms_database_user }}' }
+    - { setting: 'DB_PASSWORD', value: '{{ librenms_database_password }}' }
+    - { setting: 'LIBRENMS_USER', value: '{{ librenms_system_user }}' }
+
+- name: Initialise the LibreNMS database
+  command: "php build-base.php"
+  args:
+    chdir: "{{ librenms_install_dir }}"
+  register: librenms_database_build_result
+  changed_when: "'Nothing to migrate' not in librenms_database_build_result.stdout"
+
+- name: Get list of current LibreNMS users
+  command: "mysql -u{{ librenms_database_user }} -p{{ librenms_database_password }} {{ librenms_database_name }} -e 'SELECT username FROM users'"
+  register: librenms_user_list
+  changed_when: false
+
+- name: Create LibreNMS admin user
+  command: "php adduser.php {{ librenms_admin_user }} {{ librenms_admin_password }} 10 {{ librenms_admin_email }}"
+  args:
+    chdir: "{{ librenms_install_dir }}"
+  when: "librenms_admin_user not in librenms_user_list.stdout_lines"
+  register: librenms_add_admin_user_result
+  changed_when: "'already exists' not in librenms_add_admin_user_result.stdout"
+
+- name: Configure cron
+  copy:
+    src: "{{ librenms_install_dir }}/librenms.nonroot.cron"
+    dest: /etc/cron.d/librenms
+    remote_src: yes
+
+- name: Configure logrotate
+  copy:
+    src: "{{ librenms_install_dir }}/misc/librenms.logrotate"
+    dest: /etc/logrotate.d/librenms
+    remote_src: yes
+
+- name: copy librenms.conf
+  copy:
+    remote_src: yes
+    src: /etc/php/7.4/fpm/pool.d/www.conf
+    dest: /etc/php/7.4/fpm/pool.d/librenms.conf
+
+- name: Copy snmpd.conf
+  copy:
+    remote_src: yes
+    src: /opt/librenms/snmpd.conf.example
+    dest: /etc/snmp/snmpd.conf
+
+- name: Configure PHP-FPM, change block www to librenms
+  lineinfile: 
+    path: '/etc/php/7.4/fpm/pool.d/librenms.conf'
+    regexp: '[www]'
+    line: '[librenms]'
+    state: present
+
+- name: Configure PHP-FPM , change user
+  lineinfile: 
+    path: '/etc/php/7.4/fpm/pool.d/librenms.conf'
+    regexp: 'user = www-data'
+    line: 'user = librenms'
+    state: present
+
+- name: Configure PHP-FPM , change group
+  lineinfile: 
+    path: '/etc/php/7.4/fpm/pool.d/librenms.conf'
+    regexp: 'group = www-data'
+    line: 'group = librenms'
+    state: present
+
+- name: Configure PHP-FPM , change lisetn
+  lineinfile: 
+    path: '/etc/php/7.4/fpm/pool.d/librenms.conf'
+    regexp: 'listen = /run/php/php7.4-fpm.sock'
+    line: 'listen = /run/php-fpm-librenms.sock'
+    state: present
+
+#- name: Enable lnms command completion, ln -s
+#  shell: 'ln -s /opt/librenms/lnms /usr/local/bin/lnms'
+
+- name: Enable lnms command completion, copy file
+  copy:
+    remote_src: yes
+    src: /opt/librenms/misc/lnms-completion.bash
+    dest: /etc/bash_completion.d/
+
+- name: Enable lnms command completion, Create Symlink of file
+  file: 
+    src: '/opt/librenms/lnms'
+    dest: '/usr/local/bin/lnms'
+    state: link  
+
+- name: Edit the text which says RANDOMSTRINGGOESHERE and set your own community string.
+  get_url:
+    url: "https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro"
+    dest: "/usr/bin/distro"
+    mode: '0755'
+  notify: Restart snmpd

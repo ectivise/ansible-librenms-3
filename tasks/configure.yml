@@ -1,4 +1,4 @@
----
+---        
 - name: Configure LibreNMS
   template:
     src: config.php.j2
@@ -48,3 +48,27 @@
     src: "{{ librenms_install_dir }}/misc/librenms.logrotate"
     dest: /etc/logrotate.d/librenms
     remote_src: yes
+
+- name: Configure PHP-FPM
+  template:
+    src: librenms.conf.j2
+    dest: /etc/php/7.4/fpm/pool.d/librenms.conf
+  notify: Restart PHP
+
+- name: Enable lnms command completion, copy file
+  copy:
+    remote_src: yes
+    src: /opt/librenms/misc/lnms-completion.bash
+    dest: /etc/bash_completion.d/
+- name: Enable lnms command completion, Create Symlink of file
+  file: 
+    src: '/opt/librenms/lnms'
+    dest: '/usr/local/bin/lnms'
+    state: link  
+
+- name: Edit the text which says RANDOMSTRINGGOESHERE and set your own community string.
+  get_url:
+    url: "https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro"
+    dest: "/usr/bin/distro"
+    mode: '0755'
+  notify: Restart snmpd

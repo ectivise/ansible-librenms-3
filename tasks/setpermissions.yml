@@ -1,0 +1,35 @@
+---
+# name: Set permissions
+- name: chown to librenms
+  file:
+    path: /opt/librenms
+    owner: librenms
+    group: librenms
+    recurse: yes
+    state: directory
+    mode: '0771'
+
+- name: set acl
+  acl:
+    path: "/opt/librenms/{{ item }}"
+    default: yes
+    recursive: yes
+    etype: group
+    permissions: rwx 
+    state: present
+  with_items:
+    - rrd
+    - logs
+    - bootstrap/cache
+    - storage
+
+- name: set permissions
+  command: "{{ item }}"
+  with_items:
+#    - chown -R librenms:librenms "{{ librenms_install_dir }}"
+#    - chmod 771 "{{ librenms_install_dir }}"
+    - setfacl -d -m g::rwx "{{ librenms_install_dir }}/rrd" "{{ librenms_install_dir }}/logs" "{{ librenms_install_dir }}/bootstrap/cache/" "{{ librenms_install_dir }}/storage/"
+    - setfacl -R -m g::rwx "{{ librenms_install_dir }}/rrd" "{{ librenms_install_dir }}/logs" "{{ librenms_install_dir }}/bootstrap/cache/" "{{ librenms_install_dir }}/storage/"
+
+
+

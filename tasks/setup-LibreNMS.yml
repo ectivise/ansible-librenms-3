@@ -1,24 +1,41 @@
 ---
-- name: Install prerequisite packages
-  apt:
-    name: "{{ librenms_packages }}"
-    cache_valid_time: 3600
-
-- name: Add LibreNMS user
-  user:
-    name: "{{ librenms_system_user }}"
-    home: "{{ librenms_install_dir }}"
-    create_home: no
-    system: yes
-
-- name: Clone LibreNMS repository
+- name: Download LibreNMS
   git:
     repo: "https://github.com/librenms/librenms.git"
     dest: "{{ librenms_install_dir }}"
-    version: "{{ librenms_version }}"
+    # version: "{{ librenms_version }}"
     update: no # No update, because the LibreNMS cronjob does this if set.
 
 - name: Install PHP dependencies
   composer:
     command: install
     working_dir: "{{ librenms_install_dir }}"
+
+
+- name: Set LibreNMS environment variables
+  lineinfile:
+    path: "{{ librenms_install_dir }}/.env"
+    regex: "^{{ item.setting }}="
+    line: "{{ item.setting }}={{ item.value }}"
+  loop:
+    - { setting: 'DB_HOST', value: '{{ librenms_database_host }}' }
+    - { setting: 'DB_DATABASE', value: '{{ librenms_database_name }}' }
+    - { setting: 'DB_USERNAME', value: '{{ librenms_database_user }}' }
+    - { setting: 'DB_PASSWORD', value: '{{ librenms_database_password }}' }
+    - { setting: 'LIBRENMS_USER', value: '{{ librenms_system_user }}' }
+
+- name: Get list of current LibreNMS users
+  command: "mysql -u{{ librenms_database_user }} -p{{ librenms_database_password }} {{ librenms_database_name }} -e 'SELECT username FROM users'"
+  register: librenms_user_list
+  changed_when: false
+
+- name: Create LibreNMS admin user
+  command: "php adduser.php {{ librenms_admin_user }} {{ librenms_admin_password }} 10 {{ librenms_admin_email }}"
+  args:
+    chdir: "{{ librenms_install_dir }}"
+  when: "librenms_admin_user not in librenms_user_list.stdout_lines"
+  register: librenms_add_admin_user_result
+  changed_when: "'already exists' not in librenms_add_admin_user_result.stdout"
+
+
+

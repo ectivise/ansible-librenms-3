@@ -1,25 +1,15 @@
 ---
-- name: Fail if OS is not Ubuntu 18.04
+# should check install, new install, post-install, fix issue, etc
+# e.g. reset admin password, add new user
+# plugin should also be post-installation
+# TODO: remote access MariaDB, poller use remote db, redis, memcache etc, remote replication
+- name: Fail if OS is not Ubuntu 20
   assert:
     that:
       - "ansible_distribution == 'Ubuntu'"
-      - "ansible_distribution_release == 'bionic'"
-    fail_msg: "This role only supports deployment to Ubuntu 18.04 systems"
-
-- name: Include LibreNMS setup tasks
-  include_tasks: setup-LibreNMS.yml
-
-- name: Include MariaDB setup tasks
-  include_tasks: setup-MariaDB.yml
-
-- name: Include web server setup tasks
-  include_tasks: setup-web.yml
-
-- name: Include SNMP setup tasks
-  include_tasks: setup-SNMP.yml
-
-- name: Include LibreNMS configuration tasks
-  include_tasks: configure.yml
-
-- name: Include permission tasks
-  include_tasks: permissions.yml
+      - "ansible_distribution_release == 'focal'"
+    fail_msg: "This role only supports deployment to Ubuntu 20.04 systems"
+- import_tasks: ConfigMariadb_ext.yml
+#- import_tasks: main_0.yml
+#- import_tasks: main_1.yml
+#- import_tasks: validate.yml

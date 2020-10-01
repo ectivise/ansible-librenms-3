@@ -1,0 +1,7 @@
+---
+- name: Configure PHP-FPM
+  template:
+    src: phpfpm-librenms.conf.j2
+    dest: /etc/php/7.4/fpm/pool.d/librenms.conf
+  notify: Restart PHP
+#- debug: msg="Restart PHP "
